@@ -1,8 +1,8 @@
 diff --git a/config.def.h b/config.def.h
-index 7da50d2..4105406 100644
+index 7da50d2..740e985 100644
 --- a/config.def.h
 +++ b/config.def.h
-@@ -4,12 +4,12 @@
+@@ -4,19 +4,19 @@
                          ((hex >> 8) & 0xFF) / 255.0f, \
                          (hex & 0xFF) / 255.0f }
  /* appearance */
@@ -17,6 +17,15 @@ index 7da50d2..4105406 100644
  static const float rootcolor[]             = COLOR(0x000000ff);
  /* This conforms to the xdg-protocol. Set the alpha to zero to restore the old behavior */
  static const float fullscreen_bg[]         = {0.0f, 0.0f, 0.0f, 1.0f}; /* You can also use glsl colors */
+ static uint32_t colors[][3]                = {
+ 	/*               fg          bg          border    */
+-	[SchemeNorm] = { 0xbbbbbbff, 0x222222ff, 0x444444ff },
+-	[SchemeSel]  = { 0xeeeeeeff, 0x005577ff, 0x005577ff },
++	[SchemeNorm] = { 0xbbbbbbff, 0x000000ff, 0x444444ff },
++	[SchemeSel]  = { 0xeeeeeeff, 0x002233ff, 0x005577ff },
+ 	[SchemeUrg]  = { 0,          0,          0x770000ff },
+ };
+ 
 @@ -49,7 +49,7 @@ static const MonitorRule monrules[] = {
     /* name        mfact  nmaster scale layout       rotate/reflect                x    y
      * example of a HiDPI laptop monitor:
@@ -66,14 +75,21 @@ index 7da50d2..4105406 100644
  
  #define TAGKEYS(KEY,SKEY,TAG) \
  	{ MODKEY,                    KEY,            view,            {.ui = 1 << TAG} }, \
-@@ -121,8 +121,18 @@ static const enum libinput_config_tap_button_map button_map = LIBINPUT_CONFIG_TA
+@@ -121,8 +121,25 @@ static const enum libinput_config_tap_button_map button_map = LIBINPUT_CONFIG_TA
  #define SHCMD(cmd) { .v = (const char*[]){ "/bin/sh", "-c", cmd, NULL } }
  
  /* commands */
 -static const char *termcmd[] = { "foot", NULL };
 -static const char *menucmd[] = { "wmenu-run", NULL };
 +static const char *termcmd[] = { "kitty", NULL };
-+static const char *menucmd[] = { "wmenu-run", "-f", "Jet Brains Mono 10", NULL };
++static const char *menucmd[] = {
++	"wmenu-run",
++	"-i",
++	"-f", "JetBrains Mono 10",
++	"-N", "000000", "-n", "bbbbbb",
++	"-S", "002233", "-s", "eeeeee",
++	NULL
++};
 +
 +/* Macbook Air M2 commands */
 +static const char *brightness_up[]   = { "brightnessctl", "set", "+5%", NULL };
@@ -87,7 +103,7 @@ index 7da50d2..4105406 100644
  
  static const Key keys[] = {
  	/* Note that Shift changes certain key codes: 2 -> at, etc. */
-@@ -170,6 +180,16 @@ static const Key keys[] = {
+@@ -170,6 +187,16 @@ static const Key keys[] = {
  #define CHVT(n) { WLR_MODIFIER_CTRL|WLR_MODIFIER_ALT,XKB_KEY_XF86Switch_VT_##n, chvt, {.ui = (n)} }
  	CHVT(1), CHVT(2), CHVT(3), CHVT(4), CHVT(5), CHVT(6),
  	CHVT(7), CHVT(8), CHVT(9), CHVT(10), CHVT(11), CHVT(12),
