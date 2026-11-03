@@ -14,6 +14,9 @@ Machine configuration files, mirroring where they live on a system.
   to `~/.config/dwl/`). `run.sh` starts dwl piped through slstatus;
   `autostart.sh` finalizes the uwsm session and sets the wallpaper
   with swaybg.
+- `config/ghostty/` - Ghostty terminal config (goes to
+  `~/.config/ghostty/`). Font and colors mirror the kitty config:
+  JetBrains Mono 10 with the Adwaita darker palette.
 - `.zprofile` - zsh login profile. Runs fastfetch, aliases `vim` to
   `nvim`, and aliases `dwl` to launch the compositor through uwsm.
 
