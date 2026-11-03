@@ -1,8 +1,6 @@
-# Font (matches kitty: JetBrains Mono 10)
 font-family = JetBrains Mono
 font-size = 10
 
-# Colors: Adwaita darker (matches kitty: Adwaita darker)
 background = #000000
 foreground = #deddda
 cursor-color = #deddda
@@ -28,11 +26,8 @@ palette = 13=#dc8add
 palette = 14=#93ddc2
 palette = 15=#f6f5f4
 
-# Login shell so ~/.zprofile is sourced (like kitty's `shell zsh --login`)
 command = /usr/bin/zsh --login
 
-# Cmd+<digit> goes to tab N. Cmd arrives as ctrl here (dwl xkb
-# `ctrl:swap_lwin_lctl`); `super+<digit>` is taken by dwl's tag bindings.
 keybind = ctrl+1=goto_tab:1
 keybind = ctrl+2=goto_tab:2
 keybind = ctrl+3=goto_tab:3
@@ -43,6 +38,4 @@ keybind = ctrl+7=goto_tab:7
 keybind = ctrl+8=goto_tab:8
 keybind = ctrl+9=goto_tab:9
 
-# Tab visibility. Ghostty 1.4 has no tab-bar toggle action; this is the
-# closest: an on-demand grid overview of tabs.
-keybind = ctrl+shift+b=toggle_tab_overview
+window-show-tab-bar = never
