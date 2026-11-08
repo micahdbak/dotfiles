@@ -41,6 +41,7 @@ TABLE_DELIMITER_RE = re.compile(
 TABLE_ROW_RE = re.compile(r"^\s*\|.*\|\s*$")
 HTML_START_RE = re.compile(r"^\s{0,3}(?:<!--|</?[A-Za-z][^>]*>)")
 INLINE_CODE_RE = re.compile(r"(`+)(.+?)\1")
+INLINE_CODE_SPACE = "\x00"
 HARD_BREAK_RE = re.compile(r"(?: {2,}|\\)$")
 
 ASCII_REPLACEMENTS = str.maketrans(
@@ -351,6 +352,21 @@ def copy_html_block(lines: list[str], start: int) -> tuple[list[str], int]:
     return block, index
 
 
+def protect_inline_code_spaces(text: str) -> str:
+    pieces: list[str] = []
+    cursor = 0
+    for match in INLINE_CODE_RE.finditer(text):
+        pieces.append(text[cursor : match.start()])
+        pieces.append(match.group(0).replace(" ", INLINE_CODE_SPACE))
+        cursor = match.end()
+    pieces.append(text[cursor:])
+    return "".join(pieces)
+
+
+def restore_inline_code_spaces(text: str) -> str:
+    return text.replace(INLINE_CODE_SPACE, " ")
+
+
 def wrap_paragraph(
     source_lines: list[str],
     width: int,
@@ -368,6 +384,7 @@ def wrap_paragraph(
         source_lines = [*source_lines[:-1], last_line[: hard_break.start()]]
 
     text = " ".join(line.strip() for line in source_lines)
+    text = protect_inline_code_spaces(text)
     available_width = max(
         width, len(initial_indent) + 1, len(subsequent_indent) + 1
     )
@@ -379,6 +396,7 @@ def wrap_paragraph(
         break_long_words=False,
         break_on_hyphens=False,
     )
+    wrapped = [restore_inline_code_spaces(line) for line in wrapped]
     if not wrapped:
         wrapped = [initial_indent.rstrip()]
     if hard_break_suffix:
