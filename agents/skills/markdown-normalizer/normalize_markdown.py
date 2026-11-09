@@ -43,6 +43,7 @@ HTML_START_RE = re.compile(r"^\s{0,3}(?:<!--|</?[A-Za-z][^>]*>)")
 INLINE_CODE_RE = re.compile(r"(`+)(.+?)\1")
 INLINE_CODE_SPACE = "\x00"
 HARD_BREAK_RE = re.compile(r"(?: {2,}|\\)$")
+INDENTED_CODE_INDENT = 4
 
 ASCII_REPLACEMENTS = str.maketrans(
     {
@@ -415,6 +416,23 @@ def strip_continuation_indent(line: str, width: int) -> str:
     return line.lstrip()
 
 
+def is_detached_code(line: str, continuation_width: int) -> bool:
+    """True for an indented code line that cannot sit inside a list item.
+
+    Code nested in an item is indented four columns past the item's content.
+    A line at the document's code indent but short of that is an indented code
+    block after the item, so it is preserved instead of folded into prose. A
+    tab reads as the document's code indent.
+    """
+    if line.startswith("\t"):
+        return True
+    line_indent = leading_indentation(line)
+    return (
+        line_indent >= INDENTED_CODE_INDENT
+        and line_indent < continuation_width + INDENTED_CODE_INDENT
+    )
+
+
 def wrap_list_item(
     lines: list[str], start: int, width: int
 ) -> tuple[list[str], int]:
@@ -440,10 +458,12 @@ def wrap_list_item(
                 ),
                 None,
             )
-            if (
-                next_content is not None
-                and leading_indentation(lines[next_content]) > base_indent
-            ):
+            if next_content is None:
+                break
+            next_line = lines[next_content]
+            if leading_indentation(next_line) > base_indent:
+                if is_detached_code(next_line, continuation_width):
+                    break
                 item_lines.append("")
                 index += 1
                 continue

@@ -39,9 +39,31 @@ explain only what is not obvious from the code itself.
 ## Performance
 
 When improving performance, prefer a refactor aimed at a 10x improvement over a
-cache that buys five percent. Always investigate a better architecture before a
-hotfix. Large gains usually come from changing the shape of the work, not from
-patching the current path.
+cache that buys five percent. Large gains usually come from changing the shape
+of the work, not from patching the current path.
+
+## Bug fixes
+
+A bug is evidence about the design. Before patching the symptom, ask what in the
+code allowed the bug to happen: a missing invariant, state held in two places, a
+function doing too much, an API that is easy to misuse, or a caller using the
+API in a way it was never meant to support.
+
+When the answer is design, the fix is not a hotfix. It is an architectural
+change, or a change in how the system is used. Investigate that fix even when a
+local patch is faster to write, and prefer it when it exists. A hotfix leaves
+the cause in place, so the bug returns in a new shape and every later change
+works around it. A structural fix removes the class of bug and usually
+simplifies the code that remains.
+
+The architectural fix must still fit the project. Make the change complete: an
+API made hard to misuse, a piece of state given one owner, a caller corrected.
+Do not stop halfway and leave both the old path and the new one, which is two
+bugs for the price of one.
+
+Sometimes the design is sound and the bug is genuinely local. Then fix it
+locally. Investigate the architectural option first, and be able to say why it
+does not apply instead of skipping the question.
 
 ## Dead code
 

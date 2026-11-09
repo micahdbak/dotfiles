@@ -40,9 +40,10 @@ directory or through its installed path.
   indentation and blockquote prefixes count toward the width.
 - Leaves structural Markdown out of wrapping: headings, tables, frontmatter
   layout, HTML blocks, link definitions, thematic breaks, and hard line breaks.
-  Fenced and indented code blocks are left entirely unchanged, and inline code
-  spans are left out of ASCII conversion and never split across lines. A long
-  unbreakable token or preserved construct may remain longer than 80 columns.
+  Fenced and indented code blocks are left entirely unchanged, including an
+  indented block that follows a list item. Inline code spans are left out of
+  ASCII conversion and never split across lines. A long unbreakable token or
+  preserved construct may remain longer than 80 columns.
 
 ## Remaining non-ASCII
 
